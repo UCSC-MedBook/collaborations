@@ -47,14 +47,33 @@ Accounts.onCreateUser(function (options, user) {
 });
 
 // make absolutely sure user.collaborations is set
+// also migrate from old collaborations model if applicable
 Accounts.onLogin(function (loginObj) {
   var user = loginObj.user;
-  var collabs = user.collaborations;
+  var currentCollabs = user.collaborations;
+
   // also check "email_address" and "personal" just in case
-  if (!collabs || !collabs.email_address || !collabs.personal) {
+  // (memberOf is set during `getCollaborations`, so we don't technically
+  // need that one)
+  if (!currentCollabs || !Array.isArray(currentCollabs)
+      || !currentCollabs.email_address || !currentCollabs.personal) {
+    var newCollabs = getDefaultCollabs(user);
+
+    // if the user has user.collaborations as an array, grab those
+    if (Array.isArray(currentCollabs)) {
+      newCollabs = _.uniq(newCollabs.concat(currentCollabs));
+    }
+
+    // if they're doing this for the first time and they have
+    // user.profile.collaborations, grab those as well
+    if ((!currentCollabs || Array.isArray(currentCollabs)) &&
+        user.profile && user.profile.collaborations) {
+      newCollabs = _.uniq(newCollabs.concat(user.profile.collaborations));
+    }
+
     Meteor.users.update(user._id, {
       $set: {
-        collaborations: getDefaultCollabs(user),
+        collaborations: newCollabs,
       }
     });
   }
