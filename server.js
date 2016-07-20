@@ -71,7 +71,7 @@ Accounts.onLogin(function (loginObj) {
 
 // set up some stuff so that the reset password emails don't look like
 // they're coming from ROOT_URL (0.0.0.0/app-name)
-
+/*
 Accounts.emailTemplates.resetPassword.from = function () {
   return "MedBook Admin <ucscmedbook@gmail.com>";
 }
@@ -94,3 +94,4 @@ Accounts.emailTemplates.resetPassword.text = function (user, token) {
 
   return text;
 };
+*/

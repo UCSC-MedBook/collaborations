@@ -64,7 +64,7 @@ function getAssociatedCollaborators (doc) {
 
   // add the current collaboration
   // TODO: is this the behaviour we want?
-  associatedCollaborations[doc.name] = 1;
+  //associatedCollaborations[doc.name] = 1;
 
   // the dynamic queue of tree nodes that we're going to parse through
   // NOTE: list of collaboration names
